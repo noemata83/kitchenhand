@@ -1,5 +1,7 @@
 const cheerio = require('cheerio');
 const request = require('request');
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
 const argv = require('yargs').
     option('url', {
         alias: 'u',
@@ -11,7 +13,7 @@ const argv = require('yargs').
 
 request(argv.url, (error, res, html) => {
     if (!error) {
-        const $ = cheerio.load(html);
+        const { document } = (new JSDOM(html)).window;
 
         let recipe = {
             name: "",
@@ -20,23 +22,23 @@ request(argv.url, (error, res, html) => {
             recipeInstructions: []
         }
 
-        const JSONdata = getJSONBlob($);
+        const JSONdata = getJSONBlob(document);
         if (Object.keys(JSONdata).length > 0) {
             recipe.name = JSONdata.name;
             recipe.description = JSONdata.description;
             recipe.recipeIngredient = JSONdata.recipeIngredient;
             recipe.recipeInstructions = JSONdata.recipeInstructions;
         } else {
-            recipe = getItemProps($, recipe);
+            recipe = getItemProps(document, recipe);
         }
         console.log(JSON.stringify(recipe, undefined, 2));
     }
 });
 
-const getJSONBlob = ($) => {
+const getJSONBlob = (document) => {
     let json = {};
-    $('script[type="application/ld+json"]').each( (_, elem) => 
-    {   let data = JSON.parse($(elem).html());
+    document.querySelectorAll('script[type="application/ld+json"]').forEach( (elem) => 
+    {   let data = JSON.parse(elem.innerHTML);
         if (data['@type'] !== 'Recipe') {
             return true;
         } else {
@@ -47,10 +49,12 @@ const getJSONBlob = ($) => {
     return json;
 }
 
-const getItemProps = ($, recipe) => {
+const getItemProps = (document, recipe) => {
     for (let key in recipe) {
-        recipe[key] = $(`[itemprop="${key}"]`).text().split('\n');
-        recipe[key] = recipe[key].map(value => value.replace(/\s{3}/g, "").trim()).filter(value => value !== "");
+        let rawData = document.querySelectorAll(`[itemprop="${key}"]`);
+        const dataArray = [];
+        rawData.forEach(elem => { dataArray.push(elem.textContent.replace(/\s{3,}/g, '')); });
+        recipe[key] = dataArray;
     }
     return recipe;
 }

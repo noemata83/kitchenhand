@@ -9,7 +9,7 @@
   "author": "T. McKinney",
   "license": "ISC",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
+    "jsdom": "^11.6.2",
     "request": "^2.83.0",
     "yargs": "^11.0.0"
   }
