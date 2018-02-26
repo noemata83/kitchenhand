@@ -29,7 +29,7 @@ request(argv.url, (error, res, html) => {
         } else {
             recipe = getItemProps($, recipe);
         }
-        console.log(recipe);
+        console.log(JSON.stringify(recipe, undefined, 2));
     }
 });
 
@@ -49,7 +49,8 @@ const getJSONBlob = ($) => {
 
 const getItemProps = ($, recipe) => {
     for (let key in recipe) {
-        recipe[key] = $(`[itemprop="${key}"]`).text();
+        recipe[key] = $(`[itemprop="${key}"]`).text().split('\n');
+        recipe[key] = recipe[key].map(value => value.replace(/\s{3}/g, "").trim()).filter(value => value !== "");
     }
     return recipe;
 }
