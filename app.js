@@ -62,23 +62,19 @@ const getItemProps = (document, recipe) => {
         let dataArray = [];
         rawData.forEach(elem => { dataArray.push(elem.textContent.replace(/\s{3,}/g, ' ').trim()); });
         if (dataArray.length === 0) {
-            console.log(key + " is length 0");
             dataArray = getByAlternateNames(document, key);
         }
-        console.log(dataArray);
         recipe[key] = dataArray.filter(el => el !== '');
     }
     return recipe;
 }
 
 const getByAlternateNames = (document, key) => {
-//    alternateNames[key].forEach(name => {
     for (let i = 0; i < alternateNames[key].length; i++) {
         let dataArray = [];
         let rawData = document.querySelectorAll(`[itemprop="${alternateNames[key][i]}"]`);
         rawData.forEach(elem => { dataArray.push((elem.textContent).replace(/\s{3,}/g, ' ').trim()); });
         if (dataArray.length > 0) {
-            console.log("I'm returning: ", dataArray);
             return dataArray;
         }
     }
