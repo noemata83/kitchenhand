@@ -1,8 +1,5 @@
-const request = require('request');
-const jsdom = require('jsdom');
-const UNITS = require('./unitDictionary');
+const recipeScraper = require('./scraper/recipeScraper');
 
-const { JSDOM } = jsdom;
 const argv = require('yargs').
     option('url', {
         alias: 'u',
@@ -12,115 +9,11 @@ const argv = require('yargs').
     .help()
     .argv;
 
-const alternateNames = {
-    name: ['title', 'recipe'],
-    description: [],
-    recipeIngredient: ['recipeIngredients', 'ingredients', 'ingredient'],
-    recipeInstructions: ['recipeInstruction', 'instruction', 'preparation'],
-    prepTime: [],
-    cookTime: [],
-    totalTime: []
-}
+recipeScraper.fetchRecipe(argv.url)
 
-request(argv.url, (error, res, html) => {
-    if (!error) {
-        const { document } = (new JSDOM(html)).window;
 
-        let recipe = {
-            name: "",
-            description: "",
-            recipeIngredient: [],
-            recipeInstructions: [],
-            prepTime: null,
-            cookTime: null,
-            totalTime: null,
-        }
 
-        const JSONdata = getJSONBlob(document);
-        if (Object.keys(JSONdata).length > 0) {
-            for (let key in recipe) {
-                recipe[key] = JSONdata[key];
-            }
-        } else {
-            recipe = getItemProps(document, recipe);
-        }
-        recipe.recipeIngredient = recipe.recipeIngredient.map(ingredient => parseIngredientString(ingredient));
-        console.log(recipe);
-    }
-});
 
-const getJSONBlob = (document) => {
-    let json = {};
-    document.querySelectorAll('script[type="application/ld+json"]').forEach( (elem) => 
-    {   let data = JSON.parse(elem.innerHTML);
-        if (data['@type'] !== 'Recipe') {
-            return true;
-        } else {
-            json = data;
-        }
-    }
-    );
-    return json;
-}
 
-const getItemProps = (document, recipe) => {
-    for (let key in recipe) {
-        let rawData = document.querySelectorAll(`[itemprop="${key}"]`);
-        let dataArray = [];
-        rawData.forEach(elem => { dataArray.push(elem.textContent.replace(/\s{3,}/g, ' ').trim()); });
-        if (dataArray.length === 0) {
-            dataArray = getByAlternateNames(document, key);
-        }
-        recipe[key] = dataArray.filter(el => el !== '');
-    }
-    return recipe;
-}
 
-const getByAlternateNames = (document, key) => {
-    for (let i = 0; i < alternateNames[key].length; i++) {
-        let dataArray = [];
-        let rawData = document.querySelectorAll(`[itemprop="${alternateNames[key][i]}"]`);
-        rawData.forEach(elem => { dataArray.push((elem.textContent).replace(/\s{3,}/g, ' ').trim()); });
-        if (dataArray.length > 0) {
-            return dataArray;
-        }
-    }
-    return [];
-}
 
-const parseIngredientString = (ingredientString) => {
-    ({ ingredientString, amount } = extractAmount(ingredientString));
-    ({ ingredientString, unit} = extractUnit(ingredientString));
-    name = ingredientString.trim();
-    return {
-        amount,
-        unit,
-        name
-    }
-}
-
-const extractAmount = (ingredientString) => {
-    let amount = ingredientString.match(/\d+[\/\d. ]*|\d/) || "";
-    if (amount !== "") {
-        amount = amount[0];
-    };
-    ingredientString = ingredientString.slice(amount.length);
-    return {
-        ingredientString,
-        amount: amount.trim()
-    }
-}
-
-const extractUnit = (ingredientString) => {
-    let unit = ingredientString.match(/\w*\b/)[0];
-    if (UNITS.includes(unit.toLowerCase())) {
-        return {
-            ingredientString: ingredientString.slice(unit.length),
-            unit   
-        }  
-    }
-    return {
-        ingredientString,
-        unit: ''
-    }
-}
