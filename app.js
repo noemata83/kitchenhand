@@ -1,6 +1,6 @@
 const request = require('request');
 const jsdom = require('jsdom');
-const units = require('./unitDictionary');
+const UNITS = require('./unitDictionary');
 
 const { JSDOM } = jsdom;
 const argv = require('yargs').
@@ -89,18 +89,38 @@ const getByAlternateNames = (document, key) => {
 }
 
 const parseIngredientString = (ingredientString) => {
-    const ingredient = {};
+    ({ ingredientString, amount } = extractAmount(ingredientString));
+    ({ ingredientString, unit} = extractUnit(ingredientString));
+    name = ingredientString.trim();
+    return {
+        amount,
+        unit,
+        name
+    }
+}
+
+const extractAmount = (ingredientString) => {
     let amount = ingredientString.match(/\d+[\/\d. ]*|\d/) || "";
     if (amount !== "") {
         amount = amount[0];
-    }
+    };
     ingredientString = ingredientString.slice(amount.length);
-    ingredient.amount = amount.trim();
-    unitString = ingredientString.match(/\w*\b/)[0];
-    if (units.includes(unitString)) {
-        ingredient.unit = unitString;
-        ingredientString = ingredientString.slice(unitString.length);
+    return {
+        ingredientString,
+        amount: amount.trim()
     }
-    ingredient.name = ingredientString.trim();
-    return ingredient;
+}
+
+const extractUnit = (ingredientString) => {
+    let unit = ingredientString.match(/\w*\b/)[0];
+    if (UNITS.includes(unit.toLowerCase())) {
+        return {
+            ingredientString: ingredientString.slice(unit.length),
+            unit   
+        }  
+    }
+    return {
+        ingredientString,
+        unit: ''
+    }
 }

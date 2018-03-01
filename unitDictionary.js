@@ -88,4 +88,9 @@ module.exports = [
     'in.',
     'inch',
     'inches',
+    'pinch',
+    'pinches',
+    'ds',
+    'dash',
+    'dashes'
 ]
