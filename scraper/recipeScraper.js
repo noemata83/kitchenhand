@@ -14,7 +14,10 @@ const alternateNames = {
 }
 
 
-const fetchRecipe = async (url) => {
+const fetchRecipe = async (url, options) => {
+    /* options
+        parseIngredients: boolean; if true attempts to parse ingredients into structured data
+    */
     try {
         const response = await axios.get(url); 
         const {document} = (new JSDOM(response.data)).window;
@@ -27,7 +30,9 @@ const fetchRecipe = async (url) => {
         } else {
             recipe = await getItemProps(document, recipe);
         }
-        recipe.parseIngredients();
+        if (options.parseIngredients) {
+            recipe.parseIngredients();
+        }
         console.log(recipe);
     } catch(e) {
         console.log(e);
