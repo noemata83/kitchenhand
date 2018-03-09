@@ -15,6 +15,7 @@ module.exports = [
     'tsp.',
     'teaspoon',
     'teaspoons',
+    'T',
     'tbsp',
     'tbsp.',
     'tablespoon',

@@ -1,4 +1,4 @@
-const recipeScraper = require('./scraper/recipeScraper');
+const kh = require('./index');
 
 const argv = require('yargs')
     .option('url', {
@@ -13,7 +13,9 @@ const argv = require('yargs')
     .help()
     .argv;
 
-recipeScraper.fetchRecipe(argv.url, argv.parse);
+kh(argv.url, argv.parse).then( recipe => {
+    console.log(recipe);
+})
 
 
 

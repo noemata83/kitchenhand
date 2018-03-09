@@ -30,12 +30,12 @@ const fetchRecipe = async (url, options) => {
         } else {
             recipe = await getItemProps(document, recipe);
         }
-        if (options.parseIngredients) {
+        if (options && options.parseIngredients) {
             recipe.parseIngredients();
         }
-        console.log(recipe);
+        return recipe;
     } catch(e) {
-        console.log(e);
+        return e;
     }
 }
 
@@ -78,4 +78,4 @@ const getByAlternateNames = (document, key) => {
     return [];
 }
 
-module.exports = { fetchRecipe };
+module.exports = fetchRecipe;
