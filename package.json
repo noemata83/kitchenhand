@@ -1,6 +1,6 @@
 {
   "name": "kitchenhand",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A simple module for fetching and extracting structured recipe data from the web",
   "main": "index.js",
   "scripts": {

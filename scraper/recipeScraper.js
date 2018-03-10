@@ -28,10 +28,11 @@ const fetchRecipe = async (url, options) => {
                 recipe[key] = JSONdata[key];
             }
         } else {
-            recipe = await getItemProps(document, recipe);
+            recipe = getByItemProps(document, recipe);
         }
+        console.log(options);
         if (options && options.parseIngredients) {
-            recipe.parseIngredients();
+            recipe = recipe.parseIngredients();
         }
         return recipe;
     } catch(e) {

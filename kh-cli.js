@@ -12,8 +12,8 @@ const argv = require('yargs')
     })
     .help()
     .argv;
-
-kh(argv.url, argv.parse).then( recipe => {
+console.log(argv.parse);
+kh(argv.url, {parseIngredients: argv.parse}).then( recipe => {
     console.log(recipe);
 })
 
