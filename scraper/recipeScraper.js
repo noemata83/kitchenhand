@@ -3,15 +3,7 @@ const jsdom = require('jsdom');
 const Recipe = require('./Recipe/Recipe');
 const { JSDOM } = jsdom;
 
-const alternateNames = {
-    name: ['title', 'recipe'],
-    description: [],
-    recipeIngredient: ['recipeIngredients', 'ingredients', 'ingredient'],
-    recipeInstructions: ['recipeInstruction', 'instruction', 'preparation'],
-    prepTime: [],
-    cookTime: [],
-    totalTime: []
-}
+const alternateKeys = require('./alternateKeys');
 
 
 const fetchRecipe = async (url, options) => {
@@ -25,16 +17,18 @@ const fetchRecipe = async (url, options) => {
         const JSONdata = getJSONBlob(document);
         if (Object.keys(JSONdata).length > 0) {
             for (let key in recipe) {
-                recipe[key] = JSONdata[key];
+                if (JSONdata[key]) {
+                    recipe[key] = JSONdata[key];
+                }
             }
         } else {
             recipe = getByItemProps(document, recipe);
         }
-        console.log(options);
         if (options && options.parseIngredients) {
             recipe = recipe.parseIngredients();
         }
-        return recipe;
+        recipe = checkIfEmpty(recipe);
+        return recipe || { message: `Could not retrieve recipe data from ${url}`};
     } catch(e) {
         return e;
     }
@@ -60,23 +54,29 @@ const getByItemProps = (document, recipe) => {
         let dataArray = [];
         rawData.forEach(elem => { dataArray.push(elem.textContent.replace(/\s{3,}/g, ' ').trim()); });
         if (dataArray.length === 0) {
-            dataArray = getByAlternateNames(document, key);
+            dataArray = getByAlternateKeys(document, key);
         }
         recipe[key] = dataArray.filter(el => el !== '');
     }
     return recipe;
 }
 
-const getByAlternateNames = (document, key) => {
-    for (let i = 0; i < alternateNames[key].length; i++) {
+const getByAlternateKeys = (document, key) => {
+    for (let i = 0; i < alternateKeys[key].length; i++) {
         let dataArray = [];
-        let rawData = document.querySelectorAll(`[itemprop="${alternateNames[key][i]}"]`);
+        let rawData = document.querySelectorAll(`[itemprop="${alternateKeys[key][i]}"]`);
         rawData.forEach(elem => { dataArray.push((elem.textContent).replace(/\s{3,}/g, ' ').trim()); });
         if (dataArray.length > 0) {
             return dataArray;
         }
     }
     return [];
+}
+
+const checkIfEmpty = (recipe) => {
+    const emptyRecipe = Object.keys(recipe).every(key => recipe[key].length === 0);
+    recipe = emptyRecipe ? null: recipe;
+    return recipe;
 }
 
 module.exports = fetchRecipe;

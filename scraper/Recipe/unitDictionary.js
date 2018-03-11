@@ -38,7 +38,7 @@ module.exports = [
     'cm\\s',
     'centimet(er|re)(s)?',
     '\"\"(s)?',
-    '(p)?in(ch(es)?)?(\\.)?',
+    '\\b(p)?in(ch(es)?)?(\\.)?',
     '\\bds\\s',
     'dash(es)?'
 ]

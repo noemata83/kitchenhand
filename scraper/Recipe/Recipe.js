@@ -17,6 +17,12 @@ class Recipe {
         this.prepTime = prepTime;
         this.cookTime = cookTime;
         this.totalTime = totalTime;
+        this.cookingMethod = "";
+        this.nutrition = "";
+        this.recipeCategory = "";
+        this.recipeCuisine= "";
+        this.recipeYield = 0;
+        this.suitableForDiet= "";
     }
 
     parseIngredients () {
@@ -29,7 +35,7 @@ class Recipe {
                 return {
                     amount: ingredientString[0].trim(),
                     unit: unit,
-                    name: ingredientString[1]
+                    name: ingredientString[1].trim()
                 }
             }
             ({ ingredientString, amount } = this.extractAmount(ingredientString));
