@@ -4,7 +4,6 @@
     Eventually, we would like to parse the ingredient string more systematically,
     perhaps using a learning algorithm of some sorts to attempt to tag unit-words and abbreviations
     automatically. This is a very temporary fix!    
-
 */
 
 module.exports = [
@@ -13,16 +12,16 @@ module.exports = [
     'teaspoon(s)?',
     'tbsp((\\.)?(s)?)?',
     'tablespoon(s)?',
-    'ounce(s)?',
-    'oz(\.)?\\s',
-    'c(up)?(s)?\\s',
-    'p(int||t(\\.)?)?(s)?\\s',
+    '(fluid )?ounce(s)?',
+    '\\b(fl(\\.)? )?oz(\\.)?',
+    '\\bc(up)?(s)?\\s',
+    '\\bp(int||t(\\.)?)?(s)?\\s',
     'q(uart||t(\\.)?)?(\\.)?(s)?\\s',
     '/g(al(\\.)?||allon)?\\s',
     'ml(\\.)?(s)?\\s',
     'millilit(er|re)(s)?',
     'cc(\\.)?(s)?\\s',
-    'l(\\.)?(s)?\\s',
+    '\\bl(\\.)?(s)?\\s',
     'lit(er|re)(s)?',
     'dl(\\.)?(s)?\\s',
     'decilit(er|re)(s)?',
@@ -30,16 +29,16 @@ module.exports = [
     'lb(\\.)?(s)?(\\.)?(s)?\\s',
     'mg(\\.)?(s)?',
     'milligram(me)?(s)?',
-    'g(ram(s)?)?\\s',
+    '\\bg(ram(s)?)?\\s',
     'gram(s)?',
     'kg\\s/',
     'kilogram(me)?(s)?',
-    'mm\\s',
+    '\\bmm\\s',
     'millimet(er|re)(s)?',
     'cm\\s',
     'centimet(er|re)(s)?',
     '\"\"(s)?',
     '(p)?in(ch(es)?)?(\\.)?',
-    'ds\\s',
+    '\\bds\\s',
     'dash(es)?'
 ]
