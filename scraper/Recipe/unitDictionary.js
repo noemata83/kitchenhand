@@ -8,7 +8,7 @@
 */
 
 module.exports = [
-    't\\s',
+    '\\bt\\s',
     'tsp(\\.)?(s)?',
     'teaspoon(s)?',
     'tbsp((\\.)?(s)?)?',

@@ -57,9 +57,7 @@ class Recipe {
     
     extractUnit (ingredientString, unitString) {
         const unit = ingredientString.match(unitString)[0];
-        console.log(unit);
         ingredientString = ingredientString.split(unit);
-        console.log(ingredientString);
         return {
             ingredientString,
             unit   
