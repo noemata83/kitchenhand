@@ -31,14 +31,15 @@ module.exports = [
     'milligram(me)?(s)?',
     '\\bg(ram(s)?)?\\s',
     'gram(s)?',
-    'kg\\s/',
+    'kg\\s',
     'kilogram(me)?(s)?',
     '\\bmm\\s',
     'millimet(er|re)(s)?',
     'cm\\s',
     'centimet(er|re)(s)?',
     '\"\"(s)?',
-    '\\b(p)?in(ch(es)?)?(\\.)?',
+    '\\b(p)?inch(es)?',
+    '\\bin.',
     '\\bds\\s',
     'dash(es)?'
 ]
