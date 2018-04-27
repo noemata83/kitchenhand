@@ -39,7 +39,7 @@ module.exports = [
     'centimet(er|re)(s)?',
     '\"\"(s)?',
     '\\b(p)?inch(es)?',
-    '\\bin.',
+    '\\bin\\.',
     '\\bds\\s',
     'dash(es)?'
 ]
