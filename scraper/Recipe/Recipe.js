@@ -23,6 +23,9 @@ class Recipe {
         this.recipeCuisine= "";
         this.recipeYield = 0;
         this.suitableForDiet= "";
+        this.datePublished = "";
+        this.dateModified = "";
+        this.image = {};
     }
 
     parseIngredients () {
@@ -30,7 +33,7 @@ class Recipe {
         this.recipeIngredient = this.recipeIngredient.map(ingredientString => {
             var amount, unit, name;
             let areThereUnits = testUnitString(ingredientString, unitString);
-            if (areThereUnits) {              
+            if (areThereUnits) {
                 ({ ingredientString, unit} = this.extractUnit(ingredientString, unitString));
                 return {
                     amount: ingredientString[0].trim(),
@@ -39,7 +42,7 @@ class Recipe {
                 }
             }
             ({ ingredientString, amount } = this.extractAmount(ingredientString));
-            name = ingredientString.trim();        
+            name = ingredientString.trim();
             return {
                 amount,
                 name
@@ -47,7 +50,7 @@ class Recipe {
         });
         return this;
     }
-    
+
     extractAmount (ingredientString) {
         let qtyCapture = /(((\d+\s?)|(\d+\/\d+))-((\d+\s?)?(\d+\/\d+)))|(\d+-(\*|\d+))|((\*|\d+)-\d+)|((\d+\s)?(\d+\/\d+)|\d+)/;
         let amount = ingredientString.match(qtyCapture) || "";
@@ -60,14 +63,14 @@ class Recipe {
             amount: amount
         }
     }
-    
+
     extractUnit (ingredientString, unitString) {
         const unit = ingredientString.match(unitString)[0];
         ingredientString = ingredientString.split(unit);
         return {
             ingredientString,
-            unit   
-        }  
+            unit
+        }
     }
 }
 
