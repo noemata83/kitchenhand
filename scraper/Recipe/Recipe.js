@@ -25,6 +25,7 @@ class Recipe {
         this.suitableForDiet= "";
         this.datePublished = "";
         this.dateModified = "";
+        this.image = {};
     }
 
     parseIngredients () {
